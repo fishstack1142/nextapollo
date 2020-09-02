@@ -1,33 +1,66 @@
 import React from 'react'
 import Link from 'next/link'
 
+const liStyle = { listStyle: "none" }
+
 function Nav() {
     return (
-        <nav>
-            <ul>
-                <li>
+        <nav style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '40px',
+            backgroundColor: '#FFB6C1',
+            
+            
+        }}>
+            <ul
+            style={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                width: '70%'
+            }}
+            >
+                <li style={liStyle}>
                     <Link href="/">
-                        <a>Home</a>
+                    <a style={{
+                        textDecoration: 'none',
+                        color: "#F0F8FF"
+                    }}>Home</a>
                     </Link>
                 </li>
-                <li>
+                <li style={liStyle}>
                     <Link href="/products">
-                        <a>Products</a>
+                        <a style={{
+                            textDecoration: 'none',
+                            color: "#F0F8FF"
+                        }}>
+                        Products</a>
                     </Link>
                 </li>
-                <li>
+                <li style={liStyle}>
                     <Link href="/cart">
-                        <a>Cart</a>
+                    <a style={{
+                        textDecoration: 'none',
+                        color: "#F0F8FF"
+                    }}>Cart</a>
                     </Link>
                 </li>
-                <li>
+                <li style={liStyle}>
                     <Link href="/signin">
-                        <a>Sign in</a>
+                    <a style={{
+                        textDecoration: 'none',
+                        color: "#F0F8FF"
+                    }}>Sign in</a>
                     </Link>
                 </li>
-                <li>
+                <li style={liStyle}>
                     <Link href="/signup">
-                        <a>Sign up</a>
+                    <a style={{
+                        textDecoration: 'none',
+                        color: "#F0F8FF"
+                    }}>Sign up</a>
                     </Link>
                 </li>
             </ul>
