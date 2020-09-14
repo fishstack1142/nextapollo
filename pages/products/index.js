@@ -1,5 +1,9 @@
 import React from "react";
 import Link from "next/link";
+import { useQuery } from "@apollo/react-hooks";
+import gql from "graphql-tag";
+
+import apolloClient from '../../apollo/apolloClient'
 
 const fakeData = [
   {
@@ -24,32 +28,57 @@ const fakeData = [
   },
 ];
 
-function products() {
+const QUERY_PRODUCTS = gql`
+  query {
+    products {
+      id
+      description
+      price
+      imageUrl
+      user{
+        name
+      }
+    }
+  }
+`;
+
+function Products() {
+  const {data, loading, error} = useQuery(QUERY_PRODUCTS);
+
+  console.log(useQuery(QUERY_PRODUCTS))
+
+  if (error) return <p>error, please try again later people</p>;
+
+  if (loading) return <p>Loading...</p>
+
+
+
   return (
     <>
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "center",
+          display: "grid",
+          gridTemplateColumns: '1fr 1fr 1fr',
+              textAlign: "center",
         }}
       >
-        {fakeData.map(product => (
-          <div key={product.id}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
-          }}
+        {data.products.map(product => (
+          <div
+            key={product.id}
+            style={{
+              display: "grid",
+              textAlign: "center",
+              margin: "40px"
+            }}
           >
             <Link href="/products/[productId]" as={`/products/${product.id}`}>
               <a>
-                <img src={product.url} width="60%" />
+                <img src={product.imageUrl} width="60%" />
               </a>
             </Link>
             <h3>{product.description}</h3>
-            <h4>{product.price}</h4>
+            <h4>$ {product.price}</h4>
+            <h5>seller : {product.user.name}</h5>
             <button>Add to Cart</button>
           </div>
         ))}
@@ -58,4 +87,4 @@ function products() {
   );
 }
 
-export default products;
+export default apolloClient(Products);
