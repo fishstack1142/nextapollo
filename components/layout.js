@@ -6,7 +6,7 @@ function PageLayout({children}) {
     return (
         <div>
             <Head>
-                <title>MAMA</title>
+                <title>eShop</title>
             </Head>
             <Nav />
 

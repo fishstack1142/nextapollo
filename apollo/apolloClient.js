@@ -31,6 +31,7 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : "",
+      "x-mem": "in-cache"//
     },
   };
 });
@@ -42,13 +43,13 @@ export default withApollo(
       cache: new InMemoryCache().restore(initialState || {}),
     });
   },
-  {
-    render: ({ Page, props }) => {
-      return (
-        <ApolloProvider client={props.apollo}>
-          <Page {...props} />
-        </ApolloProvider>
-      );
-    },
-  }
+  // {
+  //   render: ({ Page, props }) => {
+  //     return (
+  //       <ApolloProvider client={props.apollo}>
+  //         <Page {...props} />
+  //       </ApolloProvider>
+  //     );
+  //   },
+  // }
 );

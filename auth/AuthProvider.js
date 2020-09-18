@@ -2,9 +2,9 @@ import React, {createContext, useState} from 'react'
 
 export const AuthContext = createContext()
 
-function AuthProvider({children}) {
+function AuthProvider({children, userData}) {
 
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(userData)
 
     const setAuthUser = userInfo => setUser(userInfo)
 

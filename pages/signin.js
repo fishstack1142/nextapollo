@@ -136,4 +136,5 @@ function SignInPage() {
   );
 }
 
-export default apolloClient(SignInPage);
+// export default apolloClient(SignInPage);
+export default SignInPage;

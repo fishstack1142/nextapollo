@@ -117,9 +117,10 @@ function SignupPage() {
 
       <div>{success && <p>success, you can <Link href="/signin"><a>sign in</a></Link> now</p>}</div>
 
-      {error && <p>{error.graphQLErrors[0].message}</p>}
+      {error && <p>error occurred: {error.graphQLErrors[0].message}</p>}
     </Div>
   );
 }
 
-export default apolloClient(SignupPage);
+// export default apolloClient(SignupPage);
+export default SignupPage;
