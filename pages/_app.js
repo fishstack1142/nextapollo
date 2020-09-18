@@ -90,12 +90,12 @@ MyApp.getInitialProps = async ({ ctx }) => {
     if (response.ok) {
       const result = await response.json()
 
-      console.log('result is is')
-      console.log(result)
+      // console.log('result is is')
+      // console.log(result)
       return { user: result.data.user }
     } else {
 
-      console.log('it is null')
+      // console.log('it is null')
       return null
     }
 };
