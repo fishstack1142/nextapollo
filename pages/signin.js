@@ -72,6 +72,8 @@ function SignInPage() {
 
   const {setAuthUser} = useContext(AuthContext)
 
+  console.log(userInfo)
+
   
   const [login, { loading, error, data }] = useMutation(LOGIN, {
     variables: { ...userInfo },
