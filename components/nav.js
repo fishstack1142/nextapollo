@@ -6,7 +6,7 @@ import { AuthContext } from "../auth/AuthProvider";
 const liStyle = { listStyle: "none" };
 
 const Nav = () => {
-  const { user } = useContext(AuthContext);
+  const { user, signout } = useContext(AuthContext);
 
   return (
     <nav
@@ -65,7 +65,7 @@ const Nav = () => {
                 </a>
               </Link>
             </li>
-            <button>Sign Out</button>
+            <button onClick={signout}>Sign Out</button>
           </>
         )}
 
