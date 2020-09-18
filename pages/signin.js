@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Router from "next/router";
 import apolloClient from "../apollo/apolloClient";
 import styled from "styled-components";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Cookies from 'js-cookie'
+
+import {AuthContext} from '../auth/AuthProvider'
 
 const LOGIN = gql`
   mutation LOGIN($email: String!, $password: String!) {
@@ -68,33 +70,37 @@ function SignInPage() {
     password: "",
   });
 
-  const handleChange = async e => {
-    setUserInfo({
-      ...userInfo,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const {setAuthUser} = useContext(AuthContext)
 
-  //   console.log(userInfo);
-
+  
   const [login, { loading, error, data }] = useMutation(LOGIN, {
     variables: { ...userInfo },
     onCompleted: data => {
       console.log(data);
       if (data) {
-          Cookies.set('token', data.login.jwt)
+        setAuthUser(data.login.user)
+        Cookies.set('token', data.login.jwt)
         setUserInfo({
           email: "",
           password: "",
         });
       }
       console.log('completed')
-
+      
       console.log(error)
       Router.push('/products')
     },
   });
-
+  
+  
+    const handleChange = async e => {
+      setUserInfo({
+        ...userInfo,
+        [e.target.name]: e.target.value,
+      });
+    };
+  
+    //   console.log(userInfo);
   const handleSubmit = async e => {
     e.preventDefault();
     try {
