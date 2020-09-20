@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps, apollo, user }) {
    console.log('user ==>>', user)
 
   return (
-    <ApolloProvider client={apollo}>
+    <ApolloProvider client={apollo} >
       <AuthProvider userData={user}>
         <PageLayout>
           <Component {...pageProps} />
@@ -58,15 +58,18 @@ const QUERY_USER = {
   `
 }
 
-MyApp.getInitialProps = async ({ ctx }) => {
+//server
+MyApp.getInitialProps = async ({ ctx, router }) => {
   if (process.browser) {
     return __NEXT_DATA__.props.pageProps;
   }
   // console.log(ctx)
   const { headers } = ctx.req;
 
-  // console.log('headers')
-  // console.log(headers)
+  console.log('headers')
+  console.log(headers)
+
+
 
   const cookies = headers && cookie.parse(headers.cookie || '')
   // console.log('cookies')
@@ -75,6 +78,14 @@ MyApp.getInitialProps = async ({ ctx }) => {
   const token = cookies && cookies.token
   // console.log('token')
   // console.log(token);
+
+  if (!token) {
+    if (router.pathname === '/cart') {
+      ctx.res.writeHead(302, {Location: '/signin'})
+      ctx.res.end()
+    }
+    return null
+  }
 
   const response = await fetch(
     "https://graphbasicserver.azurewebsites.net/graphql",
@@ -94,6 +105,10 @@ MyApp.getInitialProps = async ({ ctx }) => {
       // console.log(result)
       return { user: result.data.user }
     } else {
+      if (router.pathname === '/cart') {
+        ctx.res.writeHead(32, {Location: '/signin'})
+        ctx.res.end()
+      }
 
       // console.log('it is null')
       return null
