@@ -4,9 +4,9 @@ import apolloClient from "../apollo/apolloClient";
 import styled from "styled-components";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 
-import {AuthContext} from '../auth/AuthProvider'
+import { AuthContext } from "../auth/AuthProvider";
 
 const LOGIN = gql`
   mutation LOGIN($email: String!, $password: String!) {
@@ -15,34 +15,42 @@ const LOGIN = gql`
         id
         name
         email
-        createdProducts{
-            id
+        createdProducts {
+          id
+          description
+        }
+        carts {
+          id
+          product {
             description
+            price
+            imageUrl
           }
-          carts{
-            id
-            product {
-              description
-              price
-              imageUrl
-            }
-            quantity
-          }
+          quantity
+        }
       }
       jwt
     }
   }
-`
+`;
 
 const Div = styled.div`
-  margin: 100px;
-  padding: 20px;
+  margin: 40px;
+  padding: 2px;
   color: red;
 `;
 
 const Para = styled.p`
   color: blue;
   text-align: center;
+  margin: 0px;
+  padding: 0px;
+`;
+
+const ErrorPara = styled(Para)`
+  color: red;
+  margin: 0px;
+  padding: 0px;
 `;
 
 const Form = styled.form`
@@ -70,36 +78,35 @@ function SignInPage() {
     password: "",
   });
 
-  const {setAuthUser} = useContext(AuthContext)
-  
+  const { setAuthUser } = useContext(AuthContext);
+
   const [login, { loading, error, data }] = useMutation(LOGIN, {
     variables: { ...userInfo },
     onCompleted: data => {
       console.log(data);
       if (data) {
-        setAuthUser(data.login.user)
-        Cookies.set('token', data.login.jwt)
+        setAuthUser(data.login.user);
+        Cookies.set("token", data.login.jwt);
         setUserInfo({
           email: "",
           password: "",
         });
       }
-      console.log('completed')
-      
-      console.log(error)
-      Router.push('/products')
+      console.log("completed");
+
+      console.log(error);
+      Router.push("/products");
     },
   });
-  
-  
-    const handleChange = async e => {
-      setUserInfo({
-        ...userInfo,
-        [e.target.name]: e.target.value,
-      });
-    };
-  
-    //   console.log(userInfo);
+
+  const handleChange = async e => {
+    setUserInfo({
+      ...userInfo,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  //   console.log(userInfo);
   const handleSubmit = async e => {
     e.preventDefault();
     try {
@@ -109,8 +116,13 @@ function SignInPage() {
     }
   };
 
+  // console.log('error------', error.graphQLErrors[0].message)
+
   return (
     <Div>
+      <Div>
+        {error && <ErrorPara>{error.graphQLErrors[0].message}</ErrorPara>}
+      </Div>
       <Form onSubmit={handleSubmit}>
         <Para>sign in</Para>
         <Input
@@ -132,6 +144,11 @@ function SignInPage() {
         </Button>
       </Form>
 
+      <Div>
+        <Para>
+          Forgot password? <span style={{cursor: "pointer", color: "red"}} onClick={() => Router.push('/reset')}>Click Here</span>
+        </Para>
+      </Div>
     </Div>
   );
 }
