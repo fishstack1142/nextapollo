@@ -146,7 +146,7 @@ function SignInPage() {
 
       <Div>
         <Para>
-          Forgot password? <span style={{cursor: "pointer", color: "red"}} onClick={() => Router.push('/reset')}>Click Here</span>
+          Forgot password? <span style={{cursor: "pointer", color: "red"}} onClick={() => Router.push('/request')}>Click Here</span>
         </Para>
       </Div>
     </Div>
