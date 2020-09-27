@@ -2,66 +2,69 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-const REQUEST_RESET_PASSWORD = gql`
-  mutation REQUEST_RESET_PASSWORD($email: String!) {
-    requestResetPassword(email: $email) {
+import {useRouter} from 'next/router'
+const RESET_PASSWORD = gql`
+  mutation RESET_PASSWORD($password: String!, $token: String!) {
+    resetPassword(password: $password, token: $token) {
       message
     }
   }
 `;
 
 function ResetPassword() {
-  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const [requestResetPassword, { loading, error }] = useMutation(
-    REQUEST_RESET_PASSWORD,
+const router = useRouter()
+
+  const [resetPassword, { loading, error }] = useMutation(
+    RESET_PASSWORD,
     {
-      variables: { email },
+      variables: { password, token: router && router.query.token },
       onCompleted: data => {
         if (data) {
-          setMessage(data.requestResetPassword.message);
+          setMessage(data.resetPassword.message);
         }
       },
     }
   );
 
   const handleChange = e => {
-    setEmail(e.target.value);
+    setPassword(e.target.value);
   };
 
   const handleSubmit = async e => {
     try {
       e.preventDefault();
-      await requestResetPassword();
+      await resetPassword();
     } catch (error) {
       console.log(error);
     }
   };
 
+  console.log(router && router.query.token)
+
   return (
     <div>
-      <div>Please enter email to proceed reset password</div>
+      <div>Enter new password to proceed</div>
       <form onSubmit={handleSubmit}>
         <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={email}
+          type="password"
+          name="password"
+          placeholder="New password"
+          value={password}
           onChange={handleChange}
         />
-        <button type="submit" disabled={loading}>
+        <button type="submit"
+        disabled={loading}
+        >
           Submit
         </button>
       </form>
 
-      <div>{message && <p style={{ color: "blue" }}>{message}</p>}</div>
+      <div>{message && <p>{message}</p>}</div>
 
-      <div>
-        {error && (
-          <p style={{ color: "red" }}>{error.graphQLErrors[0].message}</p>
-        )}
-      </div>
+      <div>{error && <p>{error.graphQLErrors[0].message}</p>}</div>
     </div>
   );
 }
