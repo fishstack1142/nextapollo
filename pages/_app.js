@@ -21,7 +21,7 @@ import apolloClient from "../apollo/apolloClient";
 
 function MyApp({ Component, pageProps, apollo, user }) {
 
-   console.log('user ==>>', user)
+  //  console.log('user ==>>', user)
 
   return (
     <ApolloProvider client={apollo} >
@@ -66,18 +66,9 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
   // console.log(ctx)
   const { headers } = ctx.req;
 
-  console.log('headers')
-  console.log(headers)
-
-
-
   const cookies = headers && cookie.parse(headers.cookie || '')
-  // console.log('cookies')
-  // console.log(cookies)
 
   const token = cookies && cookies.token
-  // console.log('token')
-  // console.log(token);
 
   if (!token) {
     if (router.pathname === '/cart') {
@@ -88,7 +79,7 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
   }
 
   const response = await fetch(
-    "https://graphbasicserver.azurewebsites.net/graphql",
+    process.env.NEXT_PUBLIC_GRAPHQL_URI,
     {
       method: "post",
       headers: {
@@ -101,8 +92,6 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
     if (response.ok) {
       const result = await response.json()
 
-      // console.log('result is is')
-      // console.log(result)
       return { user: result.data.user }
     } else {
       if (router.pathname === '/cart') {
@@ -110,7 +99,6 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
         ctx.res.end()
       }
 
-      // console.log('it is null')
       return null
     }
 };
